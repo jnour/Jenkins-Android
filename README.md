@@ -50,3 +50,15 @@ To Add a new project to Jenkins, we have to create a New Item.
                                           Select option Gradle Wrapper
                                           Finally specify the task to execute (Ex: clean build) 
                                           Gradle build file Path : app/build.gradle.==>More details further
+
+
+In the next part, we will discuss more detailed configuration steps in both Ant and Gradle. The purpose of this configurations is to build multiple variant of our application without modifing any single line of code.
+The variants of our sample project is 2 apps , the first for devellopement called dev and the second app is for produciton called prod. The difference betweend these 2 apps will be : App Name,Image Icone,App Version, Package Name Webservice URL . 
+After launching our build task, we will have to APK (dev/prod), with custom ressources for both of them. 
+And the cool part, is having both flavor(dev/prod) installed at the SAME time in the SAME device, thanks to the configuration of different package name for each variant.
+
+Obviously, we can push further our customization, by having different behavior for each variant, like payed vs free, ads vs without ads ... depending in the project functionnality.
+
+Now, lets stop talking and start working. We will begin with Ant build system. Ofently used with Eclipse IDE.
+
+1- Configuration for Ant Build system : (dev vs prod)
