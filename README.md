@@ -62,3 +62,68 @@ Obviously, we can push further our customization, by having different behavior f
 Now, lets stop talking and start working. We will begin with Ant build system. Ofently used with Eclipse IDE.
 
 1- Configuration for Ant Build system : (dev vs prod)
+
+To compile and build android projectwith ant, we need to generate build file (build.xml).
+Just go under your project root folder, and execute the following command : 
+android update project --path .
+Or from any location :
+android update project --path <path to your project directory> 
+
+This command will create our build file and update all proporties files of the project
+Now we can compile our project with this command : ant debug /or ant release
+
+To configure multiple variant of our application, we need to define different target in ant build file (build.xml) and add specefic properties file for each variant.
+Ex target "full-debug" for dev: 
+<target name="full-debug" depends="read-debug-properties, process-template, debug" />
+Ex target "full-release" for prod: 
+<target name="full-release" depends="read-release-properties, process-template, clean, release" />
+
+The release target depends on target read-release-properties, wich will read our custom properties for release target (prod variant)
+Ex variant properties file "release.properties" : under project root folder
+<target name="read-release-properties">
+		<property file="release.properties" />
+</target>
+
+We need to create 2 properties file (release.properties and debug.properties) 
+Ex of release.properties :
+/*** Declare keystore to use and relative informations ***/
+key.store=testapp
+key.alias=test
+key.store.password=testapp
+key.alias.password=testapp
+
+/***  Define properties specefic for release target (prod variant)  ***/
+app.version.packagename = com.test.app
+app.version.code = 1
+app.version.name = 1.0
+app.name = Test-App-Prod
+app.url = http://www.test-app.com/
+
+We do the same in the debug.properties with specefic information for dev variant. 
+Info : All details will be found under sample project source code.
+
+All these properties will be used during customization process. We will create custom file (under folder /custom) for all data to modify with each variant. 
+
+1-Create Manifest file : manifest.xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="@app.version.packagename@"
+    android:versionCode="@app.version.code@"
+	android:versionName="@app.version.name@" >
+	
+	<....all permissions and activties ../>
+<manifest/>
+
+All the informations @...@ will be filled from target.properties files (Ex: release.properties)
+
+2- Create Custom ressources files : custom_ressources.xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">@app.name@</string>
+    <string name="web_service_url">@app.url@</string>
+</resources>
+
+3- Create drawable folders for all images to change: under folder /custom
+/drawable-hdpi
+/drawable-xhdpi
+...
