@@ -105,7 +105,7 @@ app.url = http://www.test-app.com/
 We do the same in the **debug.properties** with specefic information for dev variant.   
 Info : All details will be found under sample project source code.  
 
-All these properties will be used during customization process. We will create custom file (under folder /custom) for all data to modify with each variant.   
+All these properties will be used during customization process. We will create custom file **(under folder /custom)** for all data to modify with each variant.   
 
 #### -Create Manifest file : **manifest.xml**  
 ```
@@ -153,13 +153,13 @@ We will call the target that process our cutom files **process-custom**
 			<filter token="app.version.code" value="${app.version.code}"/>
 			<filter token="app.name" value="${app.name}"/>
 	</filterset>
-		<copy file="./templates/build_values.xml" todir="./res/values" overwrite="true">
+		<copy file="./custom/custom_ressources.xml" todir="./res/values" overwrite="true">
 			<filterset refid="build-tokens" />
 		</copy> 
-		<copy file="./templates/AndroidManifest.xml" todir="." overwrite="true">
+		<copy file="./custom/AndroidManifest.xml" todir="." overwrite="true">
 			<filterset refid="build-tokens" />
 		</copy>
-		<copy file="./templates/drawable-hdpi/ic_launcher.png" todir="./res/drawable" 			overwrite="true"/>		
+		<copy file="./custom/drawable-hdpi/ic_launcher.png" todir="./res/drawable" 			overwrite="true"/>		
 </target>
 ````
 As already described, the target process-custom is called during our main build target **full-release**
