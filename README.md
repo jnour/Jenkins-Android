@@ -73,14 +73,14 @@ This command will create our build file and update all proporties files of the p
 Now we can compile our project with this command : ant debug /or ant release  
 
 To configure multiple variant of our application, we need to define different target in ant build file (build.xml) and add specefic properties file for each variant.  
-Ex target "full-debug" for dev:   
+Ex target **full-debug** for dev:   
 ```
-<target name="full-debug" depends="read-debug-properties, process-template, debug" />
+<target name="full-debug" depends="read-debug-properties, process-custom, debug" />
 Ex target "full-release" for prod: 
-<target name="full-release" depends="read-release-properties, process-template, clean, release" />
+<target name="full-release" depends="read-release-properties, process-custom, clean, release" />
 ```
 The release target depends on target read-release-properties, wich will read our custom properties for release target (prod variant)  
-Ex variant properties file "release.properties" : under project root folder  
+Ex variant properties file **release.properties** : under project root folder  
 ```
 <target name="read-release-properties">
 		<property file="release.properties" />
@@ -88,7 +88,7 @@ Ex variant properties file "release.properties" : under project root folder
 ```
 
 We need to create 2 properties file (release.properties and debug.properties)   
-Ex of release.properties :  
+Ex of **release.properties** :  
 ```
 /*** Declare keystore to use and relative informations ***/
 key.store=testapp
@@ -103,12 +103,12 @@ app.version.name = 1.0
 app.name = Test-App-Prod
 app.url = http://www.test-app.com/
 ```
-We do the same in the debug.properties with specefic information for dev variant.   
+We do the same in the **debug.properties** with specefic information for dev variant.   
 Info : All details will be found under sample project source code.  
 
 All these properties will be used during customization process. We will create custom file (under folder /custom) for all data to modify with each variant.   
 
-#### -Create Manifest file : manifest.xml  
+#### -Create Manifest file : **manifest.xml**  
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
@@ -121,7 +121,7 @@ All these properties will be used during customization process. We will create c
 ```
 All the informations @...@ will be filled from target.properties files (Ex: release.properties)  
 
-#### - Create Custom ressources files : custom_ressources.xml  
+#### - Create Custom ressources files : **custom_ressources.xml**  or **CustomValues.java**
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
@@ -129,7 +129,69 @@ All the informations @...@ will be filled from target.properties files (Ex: rele
     <string name="web_service_url">@app.url@</string>
 </resources>
 ```
+```
+public class CustomValues {
+    public static final String APP_NAME = @app.name@;
+    public static final String  WebSerViceUrl = "@app.url@";
+}
+```
 #### - Create drawable folders for all images to change: under folder /custom  
 /drawable-hdpi  
 /drawable-xhdpi  
 ...  
+
+
+#### - Define Build Process in **build.xml**
+
+All the configuraitons files already created for each custom variant, will be referenced during build process.  
+The build process is defined in our build.xml file.
+We will call the target that process our cutom files **process-custom**  
+````
+<target name="process-custom">
+	<filterset id="build-tokens">
+		<filter token="app.version.packagename" value="${app.version.packagename}"/>
+			<filter token="app.version.name" value="${app.version.name}"/>
+			<filter token="app.version.code" value="${app.version.code}"/>
+			<filter token="app.name" value="${app.name}"/>
+	</filterset>
+		<copy file="./templates/build_values.xml" todir="./res/values" overwrite="true">
+			<filterset refid="build-tokens" />
+		</copy> 
+		<copy file="./templates/AndroidManifest.xml" todir="." overwrite="true">
+			<filterset refid="build-tokens" />
+		</copy>
+		<copy file="./templates/drawable-hdpi/ic_launcher.png" todir="./res/drawable" 			overwrite="true"/>		
+</target>
+````
+As already described, the target process-custom is called during our main build target **full-release**
+````
+<target name="full-release" depends="read-release-properties, process-custom, clean, release" />
+````
+**Info : All details will be found under sample project source code.**  
+
+---
+
+## 2- Configuration for Gradle Build system : (dev vs prod)  
+To compile and build a project with Gradle, you need to generate the build file **build.gradle**  
+This file is auto-genrated with Android-Studio under folder **/app**  
+Now we can build our app with the command line : **gradle debug** / **gradle release**  
+  
+  
+To configure different version for our application, we need to define the **productFlavors** inside **build.gradle**  
+Ex : Of 2 productflavors
+````
+productFlavors {
+        dev {
+            packageName "com.test.app.dev"
+        }
+
+        prod {
+            packageName "com.test.app"
+        }
+}
+````
+To generate to variant of our app, we need to create a specefic folder for each variant.  
+By default, the main variant (prod) is under folder **\app\src\main**  
+Now we create the **dev** folder under **\app\src\dev** with cutom content for this variant.  
+
+
