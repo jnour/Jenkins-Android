@@ -36,18 +36,18 @@ The following jenkins plugins are necessary to use Android Projects with Jenkins
 
 ## 3- Configure Jenkins for Android Project  
 
-To Add a new project to Jenkins, we have to create a New Item.  
-  *Steps to follow are :  
-⋅⋅* Name your Project
-⋅⋅* Handle Source Code : Set up your repository URL using SVN or GIT
-⋅⋅* Build : Choose your android build system Ant/Gradle
-  For project using Ant build system : Select option Add Build Step ==> Call Ant  
-                                       Then specify your ant target (defined in your build file)==>More details further  
-                                       Finally specify path to your build file. (Ex: Project Parent folder/build.xml)  
+To Add a new project to Jenkins, we have to create a New Item. Steps to follow are :   
   
-  For project using Gradle build system : Select option Add Build Step ==> Invoke Gradle Script  
+*Name your Project
+*Handle Source Code : Set up your repository URL using SVN or GIT
+*Build : Choose your android build system Ant/Gradle
+  For project using Ant build system : Select option Add Build Step ==> Call Ant    
+                                       Then specify your ant target (defined in your build file)==>More details further    
+                                       Finally specify path to your build file. (Ex: Project Parent folder/build.xml)    
+  
+  For project using Gradle build system : Select option Add Build Step ==> Invoke Gradle Script     
                                           Select option Gradle Wrapper  
-                                          Finally specify the task to execute (Ex: clean build)   
+                                          Finally specify the task to execute (Ex: clean build)  
                                           Gradle build file Path : app/build.gradle.==>More details further  
 
 
