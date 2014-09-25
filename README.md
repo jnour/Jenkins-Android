@@ -173,7 +173,7 @@ As already described, the target process-custom is called during our main build 
 ## 2- Configuration for Gradle Build system : (dev vs prod)  
 To compile and build a project with Gradle, you need to generate the build file **build.gradle**  
 This file is auto-genrated with Android-Studio under folder **/app**  
-Now we can build our app with the command line : **gradle debug** / **gradle release**  
+Now we can build our app with the command line : **gradle clean build**
   
   
 To configure different version for our application, we need to define the **productFlavors** inside **build.gradle**  
