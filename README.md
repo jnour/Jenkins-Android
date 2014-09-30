@@ -74,7 +74,8 @@ Now we can compile our project with this command : ant debug /or ant release
 To configure multiple variant of our application, we need to define different target in ant build file (build.xml) and add specefic properties file for each variant.  
 Ex target **full-debug** for dev:   
 ```
-<target name="full-debug" depends="read-debug-properties, process-custom, debug" />
+<target name="full-debug" depends="read-debug-properties, process-debug-custom, debug" />
+
 Ex target "full-release" for prod: 
 <target name="full-release" depends="read-release-properties, process-custom, clean, release" />
 ```
@@ -86,8 +87,8 @@ Ex variant properties file **release.properties** : under project root folder
 </target>
 ```
 
-We need to create 2 properties file (release.properties and debug.properties)   
-Ex of **release.properties** :  
+We need to create 3 properties file (ant.properties and release.properties / debug.properties)   
+Ex of **ant.properties** :  
 ```
 /*** Declare keystore to use and relative informations ***/
 key.store=testapp
@@ -95,6 +96,9 @@ key.alias=test
 key.store.password=testapp
 key.alias.password=testapp
 
+java.encoding=ISO-8859-1 // Removing issue with warning msg unmappable character for encoding UTF-8
+
+Ex of **release.properties** :
 /***  Define properties specefic for release target (prod variant)  ***/
 app.version.packagename = com.test.app
 app.version.code = 1
@@ -160,6 +164,22 @@ We will call the target that process our cutom files **process-custom**
 			<filterset refid="build-tokens" />
 		</copy>
 		<copy file="./custom/drawable-hdpi/ic_launcher.png" todir="./res/drawable" 			overwrite="true"/>		
+</target>
+
+<target name="process-debug-custom">
+	<filterset id="build-tokens">
+		<filter token="app.version.packagename" value="${app.version.packagename}"/>
+			<filter token="app.version.name" value="${app.version.name}"/>
+			<filter token="app.version.code" value="${app.version.code}"/>
+			<filter token="app.name" value="${app.name}"/>
+	</filterset>
+		<copy file="./custom/custom_ressources.xml" todir="./res/values" overwrite="true">
+			<filterset refid="build-tokens" />
+		</copy> 
+		<copy file="./custom/AndroidManifest.xml" todir="." overwrite="true">
+			<filterset refid="build-tokens" />
+		</copy>
+		<copy file="./custom/debug-drawable-hdpi/ic_launcher.png" todir="./res/drawable" 			overwrite="true"/>		
 </target>
 ````
 As already described, the target process-custom is called during our main build target **full-release**
