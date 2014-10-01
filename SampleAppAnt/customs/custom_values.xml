@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">@app.name@</string>
+    
+    <string name="app_title">@app.title@</string>
+    
+    <string name="ws_url_rh">@app.url@</string>
+</resources>
